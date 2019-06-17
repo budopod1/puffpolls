@@ -14,9 +14,12 @@
             var isIE = /*@cc_on!@*/false || !!document.documentMode;
 
             if (isEdge || isIE) {
-                window.location.href = "edgeindex.php"
+                window.location.replace("edgeindex.php")
             }
         </script>
+        <noscript>
+            <h4>JavaScript is not used on this website except for redirecting users of Egde and IE <a href="edgeindex.php">here</a>.</h4>
+        </noscript>
         <h1>Puff.io Suggestions</h1>
         <h2>What would <i>you</i> like to see in Puff.io</h2>
         <details>
