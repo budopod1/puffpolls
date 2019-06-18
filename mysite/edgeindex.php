@@ -11,6 +11,7 @@
 
 <body>
     <div class="container">
+        <?php include "nav.php" ?>
         <h1>Puff.io Suggestions</h1>
         <h2>What would <i>you</i> like to see in Puff.io</h2>
         <h4>For a better experience please switch browsers.
@@ -21,7 +22,7 @@
             <form action="" method="POST">
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" placeholder="title" name="title">
+                    <input type="text" class="form-control" id="Title" placeholder="title" name="title">
                 </div>
                 <div class="form-group">
                     <label for="idea">Idea/Content</label>
@@ -46,6 +47,7 @@
                 <p>PUT DATA HERE</p>
             </div>
         </div>
+        <?php include "footer.php" ?>
     </div>
 </body>
 

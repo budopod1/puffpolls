@@ -1,3 +1,6 @@
+<?php
+include "conn.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,8 +20,9 @@
                 window.location.replace("edgeindex.php")
             }
         </script>
+        <?php include "nav.php" ?>
         <noscript>
-            <h4>JavaScript is not used on this website except for redirecting users of Egde and IE <a href="edgeindex.php">here</a>.</h4>
+            <h4>JavaScript is not used on this website except for redirecting users of Edge and IE <a href="edgeindex.php">here</a>.</h4>
         </noscript>
         <h1>Puff.io Suggestions</h1>
         <h2>What would <i>you</i> like to see in Puff.io</h2>
@@ -28,7 +32,7 @@
                 <form action="" method="POST">
                     <div class="form-group">
                         <label for="title">Title</label>
-                        <input type="text" class="form-control" id="title" placeholder="title" name="title">
+                        <input type="text" class="form-control" id="title" placeholder="Title" name="title">
                     </div>
                     <div class="form-group">
                         <label for="idea">Idea/Content</label>
@@ -51,6 +55,7 @@
             <div class="col"><a href="#">PUT DATA HERE</a></div>
             <div class="col"><p>PUT DATA HERE</p></div>
         </div>
+        <?php include "footer.php" ?>
     </div>
 </body>
 </html>

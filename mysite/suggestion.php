@@ -9,6 +9,7 @@
 </head>
 <body>
     <div class="container">
+        <?php include "nav.php" ?>
         <h1>Put suggestion title here</h1>
         <div class="border border-success">
             <p>Put Content here</p>
@@ -17,12 +18,13 @@
         <div class="row">
             <div class="col"><p>Votes: Put vote number here</p></div>
             <div class="col"><form action="" method="POST">
-                <button name="up" class="btn btn-primary">Up Vote</button>
+                <button name="up" class="btn btn-primary" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Up Vote</button>
             </form></div>
             <div class="col"><form action="" method="POST">
-                <button name="down" class="btn btn-danger">Down Vote</button>
+<button name="down" class="btn btn-danger" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Down Vote</button>
             </form></div>
         </div>
+        <?php include "footer.php" ?>
     </div>
 </body>
 </html>
