@@ -21,9 +21,15 @@
                 <button name="up" class="btn btn-primary" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Up Vote</button>
             </form></div>
             <div class="col"><form action="" method="POST">
-<button name="down" class="btn btn-danger" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Down Vote</button>
+                <button name="down" class="btn btn-danger" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Down Vote</button>
             </form></div>
         </div>
+        <br>
+        <br>
+        <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){?>
+            <h3>To vote register an account <a href="register.php">here</a></h3>    
+        <?php } ?>
+        <br>
         <?php include "footer.php" ?>
     </div>
 </body>

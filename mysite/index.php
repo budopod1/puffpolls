@@ -1,5 +1,16 @@
 <?php
 include "conn.php";
+if (isset($_POST["submit"])){
+    $title = $_POST["title"];
+    $content = $_POST["content"];
+    $sql = "INSERT INTO suggestions (title, content) VALUES ('$title', '$content')";
+    $conn->exec($sql);
+}
+
+$sql = "SELECT * FROM suggestions";
+$st = $conn->prepare($sql);
+$st->execute();
+$suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,10 +62,16 @@ include "conn.php";
                 <p><b>Shortened Description</b></p>
             </div>
         </div>
-        <div class="row">
-            <div class="col"><a href="#">PUT DATA HERE</a></div>
-            <div class="col"><p>PUT DATA HERE</p></div>
-        </div>
+        <?php foreach ($suggestions as $suggestion) {?>
+            <div class="row">
+                <div class="col">
+                    <?php echo $suggestion["title"] ?>
+                </div>
+                <div class="col">
+                    <?php echo $suggestion["content"] ?>
+                </div>
+            </div>
+        <?php } ?>
         <?php include "footer.php" ?>
     </div>
 </body>
