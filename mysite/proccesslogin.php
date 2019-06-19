@@ -10,12 +10,19 @@ if (isset($_POST["submit"])) {
     $user = $st->fetch(PDO::FETCH_ASSOC);
 
     if ($user['username'] == $username) {
-        if ($user["pass"] == $pass) {
+        if (password_verify($pass, $user["pass"])) {
             session_start();
             $_SESSION["loggedin"] = true;
             $_SESSION["username"] = $username;
-            header("Location: home.php");
-            die();
+            $_SESSION["id"] = $user["id"];
+            $_SESSION["type"] = $user["type"];
+            if ($user["type"] == "admin"){
+                header("Location: admin.php");
+                die();
+            } else {
+                header("Location: home.php");
+                die();
+            }
         } else {
             header("Location: login.php?error=Password not found");
             die();

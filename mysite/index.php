@@ -1,13 +1,22 @@
 <?php
 include "conn.php";
+session_start();
 if (isset($_POST["submit"])){
-    $title = $_POST["title"];
-    $content = $_POST["content"];
-    $sql = "INSERT INTO suggestions (title, content) VALUES ('$title', '$content')";
+    $title = htmlspecialchars($_POST["title"]);
+    $content = htmlspecialchars($_POST["content"]);
+    $userID = $_SESSION["id"];
+    $sql = "INSERT INTO suggestions (title, content, userid) VALUES (:title, :content, :userid)";
+    $st = $conn->prepare($sql);
+    $st->execute(['title' => $title, 'content' => $content, 'userid' => $userID]);
+
+    $lastID = $conn->lastInsertID();
+    $sql = "INSERT INTO suggestionoptions (`option`, pollid) VALUES ('Up Vote', $lastID)";
+    $conn->exec($sql);
+    $sql = "INSERT INTO suggestionoptions (`option`, pollid) VALUES ('Down Vote', $lastID)";
     $conn->exec($sql);
 }
 
-$sql = "SELECT * FROM suggestions";
+$sql = "SELECT * FROM suggestions ORDER BY id DESC";
 $st = $conn->prepare($sql);
 $st->execute();
 $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
@@ -31,7 +40,7 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
                 window.location.replace("edgeindex.php")
             }
         </script>
-        <?php include "nav.php" ?>
+        <?php include "navws.php" ?>
         <noscript>
             <h4>JavaScript is not used on this website except for redirecting users of Edge and IE <a href="edgeindex.php">here</a>.</h4>
         </noscript>
@@ -49,8 +58,12 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
                         <label for="idea">Idea/Content</label>
                         <textarea type="text" class="form-control" id="id" placeholder="Idea/Content" name="content" rows="3"></textarea>
                     </div>
-                    <button name="submit" class="btn btn-success">Submit</button>
+                    <button name="submit" class="btn btn-success" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";} ?>>Submit</button>
                 </form>
+                <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){ ?>
+                    <br>
+                    <h3>To create suggestions, register an account <a href="register.php">here</a>, and sign in <a href="login.php">here</a>.</h3>
+                <?php } ?>
             </div>
         </details>
         <hr>
@@ -65,10 +78,10 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($suggestions as $suggestion) {?>
             <div class="row">
                 <div class="col">
-                    <?php echo $suggestion["title"] ?>
+                    <a href="suggestion.php?id=<?php echo $suggestion["id"] ?>"><?php echo $suggestion["title"] ?></a>
                 </div>
                 <div class="col">
-                    <?php echo $suggestion["content"] ?>
+                    <?php echo substr($suggestion['content'], 0, 20) . "..." ?>
                 </div>
             </div>
         <?php } ?>

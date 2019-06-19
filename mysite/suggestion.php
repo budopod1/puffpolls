@@ -1,3 +1,21 @@
+<?php
+include "./conn.php";
+
+if (isset($_GET["id"])){
+    $id = $_GET["id"];
+
+    $sql = "SELECT * FROM suggestions WHERE id=$id";
+    $st = $conn->prepare($sql);
+    $st->execute();
+    $suggestion = $st->fetch(PDO::FETCH_ASSOC);
+
+    $suggestionid = $suggestion["id"];
+    $sql = "SELECT * FROM suggestionoptions WHERE pollid = $suggestionid";
+    $st = $conn->query($sql);
+    $options = $st->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,24 +28,45 @@
 <body>
     <div class="container">
         <?php include "nav.php" ?>
-        <h1>Put suggestion title here</h1>
+        <h1><?php echo $suggestion["title"] ?></h1>
         <div class="border border-success">
-            <p>Put Content here</p>
+            <p><?php echo $suggestion["content"] ?></p>
         </div>
         <br>
         <div class="row">
-            <div class="col"><p>Votes: Put vote number here</p></div>
+            <div class="col"><p><?php echo "PUT DATA HERE" ?> Votes</p></div>
+            <!--
             <div class="col"><form action="" method="POST">
                 <button name="up" class="btn btn-primary" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Up Vote</button>
             </form></div>
             <div class="col"><form action="" method="POST">
                 <button name="down" class="btn btn-danger" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Down Vote</button>
             </form></div>
+            -->
+            <?php
+            foreach ($options as $option) {
+                if ($option["option"] == "Down Vote"){
+                    $color = "danger";
+                } elseif ($option["option"] == "Up Vote") {
+                    $color = "primary";
+                } else {
+                    $color = "success";
+                }
+                ?>
+                <div class="col">
+                    <button class="btn btn-<?php echo $color ?>" 
+                    <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>
+                    <?php echo $option["option"] ?></button>
+                </div>
+                <?php
+            }
+            ?>
         </div>
-        <br>
-        <br>
+        
         <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){?>
-            <h3>To vote register an account <a href="register.php">here</a></h3>    
+            <br>
+            <br>
+            <h3>To vote register an account <a href="register.php">here</a>, and sign in <a href="login.php">here</a>.</h3>    
         <?php } ?>
         <br>
         <?php include "footer.php" ?>
