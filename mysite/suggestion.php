@@ -1,5 +1,14 @@
 <?php
 include "./conn.php";
+session_start();
+
+if (isset($_POST["submit"])){
+    $optionid=$_POST["id"];
+    $userid=$_SESSION["id"];
+
+    $sql = "INSERT INTO suggestionvotes (optionid, userid) VALUES ($optionid, $userid)";
+    $conn->exec($sql);
+}
 
 if (isset($_GET["id"])){
     $id = $_GET["id"];
@@ -34,15 +43,60 @@ if (isset($_GET["id"])){
         </div>
         <br>
         <div class="row">
-            <div class="col"><p><?php echo "PUT DATA HERE" ?> Votes</p></div>
-            <!--
-            <div class="col"><form action="" method="POST">
-                <button name="up" class="btn btn-primary" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Up Vote</button>
-            </form></div>
-            <div class="col"><form action="" method="POST">
-                <button name="down" class="btn btn-danger" <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>Down Vote</button>
-            </form></div>
-            -->
+            <?php
+            $votes=true;
+            foreach ($options as $option) {
+                if (($option["option"] != "Down Vote") && ($option["option"] != "Up Vote")){
+                    $votes=false;
+                }
+            }
+            if ($votes){
+                foreach ($options as $option) {
+                    if (($option["option"] != "Down Vote") && ($option["option"] != "Up Vote")){
+                        $votes=false;
+                    }
+                }
+                $upID=0;
+                $downID=0;
+                foreach ($options as $option) {
+                    if ($option["option"] == "Up Vote"){
+                        $upID=$option["id"];
+                    }
+                    if ($option["option"] == "Down Vote"){
+                        $downID=$option["id"];
+                    }
+                }
+                $sql="SELECT * FROM suggestionvotes WHERE optionid = $upID";
+                $st = $conn->query($sql);
+                $ups = $st->fetchAll(PDO::FETCH_ASSOC);
+
+                $sql="SELECT * FROM suggestionvotes WHERE optionid = $downID";
+                $st = $conn->query($sql);
+                $downs = $st->fetchAll(PDO::FETCH_ASSOC);
+
+                $votenum=count($ups);
+                $votenum=$votenum-count($downs);
+
+                ?>
+                <div class="col"><p><?php echo $votenum ?></p></div>
+                <?php
+            }
+            ?>
+            <?php
+            $sql = "SELECT * FROM suggestionvotes";
+            $st = $conn->query($sql);
+            $votes = $st->fetchAll(PDO::FETCH_ASSOC);
+            $totalVotes=0;
+
+            foreach ($votes as $vote) {
+                foreach ($options as $option) {
+                    if ($option["id"] == $vote["optionid"]){
+                        $totalVotes=$totalVotes+1;
+                    }
+                }
+            }
+            ?>
+            <div class="col"><?php echo $totalVotes ?> Total Vote(s)</div>
             <?php
             foreach ($options as $option) {
                 if ($option["option"] == "Down Vote"){
@@ -54,9 +108,13 @@ if (isset($_GET["id"])){
                 }
                 ?>
                 <div class="col">
-                    <button class="btn btn-<?php echo $color ?>" 
-                    <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>>
-                    <?php echo $option["option"] ?></button>
+                    <form action="" method="post">
+                        <button class="btn btn-<?php echo $color ?>" 
+                        <?php if (!(isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] == true)){echo "disabled";}?>
+                         name="submit">
+                        <?php echo $option["option"] ?></button>
+                        <input type="hidden" name="id" value="<?php echo $option["id"] ?>">
+                    </form>
                 </div>
                 <?php
             }
@@ -69,6 +127,30 @@ if (isset($_GET["id"])){
             <h3>To vote register an account <a href="register.php">here</a>, and sign in <a href="login.php">here</a>.</h3>    
         <?php } ?>
         <br>
+        <div class="row">
+            <?php
+            foreach ($options as $option) {
+                ?>
+                <div class="col"><b><?php echo $option["option"] ?></b></div>
+                <?php
+            }
+            ?>
+        </div>
+        <div class="row">
+            <?php
+            foreach ($options as $option){
+                $voteNum=0;
+                foreach ($votes as $vote) {
+                    if ($vote["optionid"] == $option["id"]){
+                        $voteNum=$voteNum+1;
+                    }
+                }
+                ?>
+                <div class="col"><?php echo $voteNum ?></div>
+                <?php
+            }
+            ?>
+        </div>
         <?php include "footer.php" ?>
     </div>
 </body>

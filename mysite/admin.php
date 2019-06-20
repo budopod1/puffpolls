@@ -1,9 +1,24 @@
 <?php
 include "conn.php";
-if (isset($_POST["poll"])){
-    $title=$_POST["title"];
-    $userid=$_SESSION["id"];
-    $sql = "INSERT INTO polls (title, userid) VALUES ('$title', '$userid')";
+session_start();
+
+// SELECT * FROM DATABASE WITH fetchAll
+
+try {
+    $sql = "SELECT * FROM suggestions";
+
+    $statement = $conn->prepare($sql);
+    $statement->execute();
+
+    $result = $statement->fetchALL();
+} catch (PDOException $error) {
+    echo $sql . '<br />' . $error->getMessage();
+}
+
+if (isset($_POST["poll"])) {
+    $title = $_POST["title"];
+    $userid = $_SESSION["id"];
+    $sql = "INSERT INTO suggestions (title, userid, content) VALUES ('$title', $userid, \"\")";
     $conn->exec($sql);
 }
 ?>
@@ -29,14 +44,39 @@ if (isset($_POST["poll"])){
         }
         ?>
         <h1>Welcome admin <?php echo $_SESSION["username"] ?></h1>
-        <h4>Fill out the form below to create a poll</h4>
-        <form action="" method="post">
-            <div class="form-group">
-                <label for="title">Poll question</label>
-                <input type="text" class="form-control" id="title" placeholder="Enter poll title" name="title">
-            </div>
-            <button type="submit" class="btn btn-primary" name="poll">Create Poll</button>
-        </form>
+        <h3>Fill out the form below to create a poll</h4>
+        <div class="p-3">
+            <form action="" method="post">
+                <div class="form-group">
+                    <label for="title">Poll question</label>
+                    <input type="text" class="form-control" id="title" placeholder="Enter poll title" name="title">
+                </div>
+                <button type="submit" class="btn btn-primary" name="poll">Create Poll</button>
+            </form>
+        </div>
+
+        <hr>
+
+        <h3>Select a poll to add options</h2>
+
+        <div class="pl-3">
+            <?php
+            if ($result && $statement->rowCount() > 0) {
+                foreach ($result as $row) { ?>
+                    <div class="row">
+                        <div class="col">
+                            <h5><a href="editpoll.php?id=<?php echo $row['id'] ?>">
+                                <?php echo $row['title'] ?>
+                            </a></h5>
+                        </div>
+                    </div>
+                    <?php
+                }
+            }
+            ?>
+        </div>
+
+
         <?php include "footer.php" ?>
     </div>
 </body>

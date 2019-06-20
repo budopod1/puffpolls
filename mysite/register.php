@@ -1,6 +1,7 @@
 <?php
 #Include connection file
 include "./conn.php";
+session_start();
 if (isset($_POST["submit"])) { 
     $username = $_POST["username"];
     $pass = $_POST["pass"];

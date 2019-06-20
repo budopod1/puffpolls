@@ -1,6 +1,7 @@
 <?php
 #Include connection to data base
 include "conn.php";
+session_start();
 
 if (isset($_GET["error"])) {
     $error = $_GET["error"];

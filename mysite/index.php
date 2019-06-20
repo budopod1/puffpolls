@@ -40,7 +40,7 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
                 window.location.replace("edgeindex.php")
             }
         </script>
-        <?php include "navws.php" ?>
+        <?php include "nav.php" ?>
         <noscript>
             <h4>JavaScript is not used on this website except for redirecting users of Edge and IE <a href="edgeindex.php">here</a>.</h4>
         </noscript>

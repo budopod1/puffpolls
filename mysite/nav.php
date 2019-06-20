@@ -1,6 +1,3 @@
-<?php
-session_start()
-?>
 <ul class="nav nav-tabs nav-fill">
     <li class="nav-item">
         <a class="nav-link" href="index.php">Home</a>
@@ -18,6 +15,13 @@ session_start()
             <a class="nav-link" href="logout.php">Logout</a>
         </li>
         <?php
+        if ($_SESSION["type"] == "admin"){
+            ?>
+            <li class="nav-item">
+                <a class="nav-link" href="admin.php">Admin Control Panel</a>
+            </li>
+            <?php
+        }
     }
     ?>
 </ul>
