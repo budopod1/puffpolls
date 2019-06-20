@@ -2,14 +2,6 @@
 include "./conn.php";
 session_start();
 
-if (isset($_POST["submit"])){
-    $optionid=$_POST["id"];
-    $userid=$_SESSION["id"];
-
-    $sql = "INSERT INTO suggestionvotes (optionid, userid) VALUES ($optionid, $userid)";
-    $conn->exec($sql);
-}
-
 if (isset($_GET["id"])){
     $id = $_GET["id"];
 
@@ -22,6 +14,25 @@ if (isset($_GET["id"])){
     $sql = "SELECT * FROM suggestionoptions WHERE pollid = $suggestionid";
     $st = $conn->query($sql);
     $options = $st->fetchAll(PDO::FETCH_ASSOC);
+}
+
+if (isset($_POST["submit"])){
+    $userid=$_SESSION["id"];
+    //$sql = "SELECT * FROM suggestionvotes WHERE userid = $userid";
+    //$st = $conn->query($sql);
+    //$votes = $st->fetchAll(PDO::FETCH_ASSOC);
+    //foreach ($options as $option){
+    //    foreach ($votes as $vote) {
+    //        if ($vote["optionid"] == $option["id"]){
+    //            header("Location: index.php");
+    //            die();
+    //        }
+    //    }
+    //}
+    $optionid=$_POST["id"];
+
+    $sql = "INSERT INTO suggestionvotes (optionid, userid) VALUES ($optionid, $userid)";
+    $conn->exec($sql);
 }
 ?>
 
@@ -147,6 +158,29 @@ if (isset($_GET["id"])){
                 }
                 ?>
                 <div class="col"><?php echo $voteNum ?></div>
+                <?php
+            }
+            ?>
+        </div>
+        <div class="row">
+            <?php
+            foreach ($options as $option){
+                $voteNum=0;
+                foreach ($votes as $vote) {
+                    if ($vote["optionid"] == $option["id"]){
+                        $voteNum=$voteNum+1;
+                    }
+                }
+                ?>
+                <div class="col">
+                    <?php 
+                    if ($voteNum == 0){
+                        echo "0%";
+                    } else {
+                        echo round($voteNum/$totalVotes*100, 1) . "%";
+                    }
+                    ?>
+                </div>
                 <?php
             }
             ?>

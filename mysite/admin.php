@@ -18,7 +18,8 @@ try {
 if (isset($_POST["poll"])) {
     $title = $_POST["title"];
     $userid = $_SESSION["id"];
-    $sql = "INSERT INTO suggestions (title, userid, content) VALUES ('$title', $userid, \"\")";
+    $content = $_POST["content"];
+    $sql = "INSERT INTO suggestions (title, userid, content) VALUES ('$title', $userid, '$content')";
     $conn->exec($sql);
 }
 ?>
@@ -50,6 +51,10 @@ if (isset($_POST["poll"])) {
                 <div class="form-group">
                     <label for="title">Poll question</label>
                     <input type="text" class="form-control" id="title" placeholder="Enter poll title" name="title">
+                </div>
+                <div class="form-group">
+                    <label for="content">Poll content</label>
+                    <textarea type="text" class="form-control" id="id" placeholder="Content" name="content" rows="3"></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" name="poll">Create Poll</button>
             </form>
