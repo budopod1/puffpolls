@@ -5,7 +5,7 @@ session_start();
 // SELECT * FROM DATABASE WITH fetchAll
 
 try {
-    $sql = "SELECT * FROM suggestions";
+    $sql = "SELECT * FROM suggestions ORDER BY id DESC";
 
     $statement = $conn->prepare($sql);
     $statement->execute();

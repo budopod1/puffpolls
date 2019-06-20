@@ -16,7 +16,7 @@ if (isset($_POST["submit"])){
     $conn->exec($sql);
 }
 
-$sql = "SELECT * FROM suggestions ORDER BY id DESC";
+$sql = "SELECT suggestions.*, users.username FROM suggestions JOIN users ON (suggestions.userid = users.id) ORDER BY id DESC";
 $st = $conn->prepare($sql);
 $st->execute();
 $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
         </script>
         <?php include "nav.php" ?>
         <noscript>
-            <h4>JavaScript is not used on this website except for redirecting users of Edge and IE <a href="edgeindex.php">here</a>.</h4>
+            <h4>JavaScript is not used on this website except for redirecting users of Edge and IE <a href="edgeindex.php">here</a> and giving users alerts.</h4>
         </noscript>
         <h1>Puff.io Suggestions</h1>
         <h2>What would <i>you</i> like to see in Puff.io</h2>
@@ -74,6 +74,9 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
             <div class="col">
                 <p><b>Shortened Description</b></p>
             </div>
+            <div class="col">
+                <p><b>Made by</b></p>
+            </div>
         </div>
         <?php foreach ($suggestions as $suggestion) {?>
             <div class="row">
@@ -82,6 +85,9 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <div class="col">
                     <?php echo substr($suggestion['content'], 0, 20) . "..." ?>
+                </div>
+                <div class="col">
+                    <?php echo $suggestion['username'] ?>
                 </div>
             </div>
         <?php } ?>

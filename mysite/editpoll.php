@@ -10,6 +10,16 @@ if (isset($_GET["id"])){
     $poll = $statement->fetch(PDO::FETCH_ASSOC);
 }
 
+if (isset($_POST["deleteEntire"])){
+    if (isset($_POST["check"])){
+        $pollid=$_GET["id"];
+        $sql = "DELETE FROM suggestions WHERE id = $pollid";
+        $conn->exec($sql);
+        header("Location: admin.php");
+        die();
+    }
+}
+
 if (isset($_POST["update"])){
     $option = $_POST["option"];
     $optionid = $_POST["optionid"];
@@ -65,6 +75,17 @@ try {
         }
         ?>
         <h1>Welcome admin <?php echo $_SESSION["username"] ?></h1>
+
+        <div class="p-3 border border-danger text-center">
+            <form action="" method="post">
+                <button class="btn btn-danger" name="deleteEntire">DELETE</button>
+                <div class="form-group form-check">
+                    <input type="checkbox" class="form-check-input" id="doubleCheck" name="check">
+                    <label class="form-check-label" for="doubleCheck">Are you sure?</label>
+                </div>
+            </form>
+        </div>
+
         <div class="p-4">
             <h4>Add Options to Poll <?php echo $poll['title'] ?></h4>
             <form action="" method="post">

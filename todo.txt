@@ -1,1 +1,18 @@
 	<==FRONTEND==>
+1 * Work on edgeindex.php = y
+
+	<==BACKEND==>
+1 * Work on edgeindex.php = y
+
+	<==OTHER==>
+1 * Work on stuff to do = n
+2 * Work on todo.txt = n
+
+	<==KEY==>
+y=DONE
+n=NOT DONE
+
+	<==STATS==>
+PERCENT DONE = 50%
+FRACTION DONE = 2/4
+FRACTION IN SIMPLEST FORM = 1/2

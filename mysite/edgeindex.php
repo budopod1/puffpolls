@@ -1,6 +1,29 @@
+</html>
+<?php
+include "conn.php";
+session_start();
+if (isset($_POST["submit"])){
+    $title = htmlspecialchars($_POST["title"]);
+    $content = htmlspecialchars($_POST["content"]);
+    $userID = $_SESSION["id"];
+    $sql = "INSERT INTO suggestions (title, content, userid) VALUES (:title, :content, :userid)";
+    $st = $conn->prepare($sql);
+    $st->execute(['title' => $title, 'content' => $content, 'userid' => $userID]);
+
+    $lastID = $conn->lastInsertID();
+    $sql = "INSERT INTO suggestionoptions (`option`, pollid) VALUES ('Up Vote', $lastID)";
+    $conn->exec($sql);
+    $sql = "INSERT INTO suggestionoptions (`option`, pollid) VALUES ('Down Vote', $lastID)";
+    $conn->exec($sql);
+}
+
+$sql = "SELECT * FROM suggestions ORDER BY id DESC";
+$st = $conn->prepare($sql);
+$st->execute();
+$suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
+?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +31,6 @@
     <title>Feedback</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-
 <body>
     <div class="container">
         <?php include "nav.php" ?>
@@ -31,7 +53,6 @@
                 <button name="submit" class="btn btn-success">Submit</button>
             </form>
         </div>
-
         <hr>
         <div class="row">
             <div class="col">
@@ -41,14 +62,17 @@
                 <p><b>Shortened Description</b></p>
             </div>
         </div>
-        <div class="row">
-            <div class="col"><a href="#">PUT DATA HERE</a></div>
-            <div class="col">
-                <p>PUT DATA HERE</p>
+        <?php foreach ($suggestions as $suggestion) {?>
+            <div class="row">
+                <div class="col">
+                    <a href="suggestion.php?id=<?php echo $suggestion["id"] ?>"><?php echo $suggestion["title"] ?></a>
+                </div>
+                <div class="col">
+                    <?php echo substr($suggestion['content'], 0, 20) . "..." ?>
+                </div>
             </div>
-        </div>
+        <?php } ?>
         <?php include "footer.php" ?>
     </div>
 </body>
-
 </html>

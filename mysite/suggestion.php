@@ -18,17 +18,17 @@ if (isset($_GET["id"])){
 
 if (isset($_POST["submit"])){
     $userid=$_SESSION["id"];
-    //$sql = "SELECT * FROM suggestionvotes WHERE userid = $userid";
-    //$st = $conn->query($sql);
-    //$votes = $st->fetchAll(PDO::FETCH_ASSOC);
-    //foreach ($options as $option){
-    //    foreach ($votes as $vote) {
-    //        if ($vote["optionid"] == $option["id"]){
-    //            header("Location: index.php");
-    //            die();
-    //        }
-    //    }
-    //}
+    $sql = "SELECT * FROM suggestionvotes WHERE userid = $userid";
+    $st = $conn->query($sql);
+    $votes = $st->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($options as $option){
+        foreach ($votes as $vote) {
+            if ($vote["optionid"] == $option["id"]){
+                header("Location: index.php");
+                die();
+            }
+        }
+    }
     $optionid=$_POST["id"];
 
     $sql = "INSERT INTO suggestionvotes (optionid, userid) VALUES ($optionid, $userid)";
