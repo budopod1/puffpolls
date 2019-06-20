@@ -77,6 +77,9 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
             <div class="col">
                 <p><b>Made by</b></p>
             </div>
+            <div class="col">
+                <p><b>Created at</b></p>
+            </div>
         </div>
         <?php foreach ($suggestions as $suggestion) {?>
             <div class="row">
@@ -88,6 +91,9 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
                 </div>
                 <div class="col">
                     <?php echo $suggestion['username'] ?>
+                </div>
+                <div class="col">
+                    <?php echo date("n/j/Y g:i a", strtotime($suggestion["created_at"])) ?>
                 </div>
             </div>
         <?php } ?>
