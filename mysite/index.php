@@ -134,9 +134,29 @@ if (isset($_POST["search"])){
                     <div class="form-group">
                         <label for="sortBy">Sort By:</label>
                         <select id="sortBy" class="form-control" name="sort">
-                            <option selected value="votenum DESC">Trending</option>
-                            <option value="id DESC">Newest</option>
-                            <option value="id ASC">Oldest</option>
+                            <option <?php
+                            if (isset($_GET["change"])){
+                                if ($_GET["sort"] == "votenum DESC"){
+                                    echo "selected";
+                                }
+                            } else {
+                                echo "selected";
+                            }
+                             ?> value="votenum DESC">Trending</option>
+                            <option <?php
+                            if (isset($_GET["change"])){
+                                if ($_GET["sort"] == "id DESC"){
+                                    echo "selected";
+                                }
+                            }
+                            ?> value="id DESC">Newest</option>
+                            <option <?php
+                            if (isset($_GET["change"])){
+                                if ($_GET["sort"] == "id ASC"){
+                                    echo "selected";
+                                }
+                            }
+                            ?> value="id ASC">Oldest</option>
                         </select>
                     </div>
                     <button name="change" class="btn btn-info">Update</button>

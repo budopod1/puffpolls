@@ -191,6 +191,14 @@ if (isset($_POST["submit"])){
             }
             ?>
         </div>
+        <?php
+        if (isset($_SESSION["type"]) && $_SESSION["type"] == "admin") {
+            ?>
+            <br>
+            <a href="editpoll.php?id=<?php echo $suggestionid ?>">Edit this page as admin</a>
+            <?php
+        }
+        ?>
         <?php include "footer.php" ?>
     </div>
 </body>

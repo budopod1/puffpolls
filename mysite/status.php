@@ -2,6 +2,22 @@
 include "conn.php";
 session_start();
 
+if (isset($_POST["change"])){
+    $id=$_POST["id"];
+    try {
+        $sql="UPDATE users SET `type` = 'admin' WHERE id = $id";
+        $conn->exec($sql);
+    } catch (PDOException $error) {
+        echo $sql.'<br />'.$error->getMessage();
+    }
+}
+
+$sql = "SELECT * FROM users";
+
+$statement = $conn->prepare($sql);
+$statement->execute();
+
+$result = $statement->fetchALL();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +42,7 @@ session_start();
         ?>
         <h1>Welcome admin <?php echo $_SESSION["username"] ?></h1>
 
-        <h3>Select a users to add options</h2>
+        <h3>Select a users to make admins</h2>
 
         <div class="pl-3">
             <?php
@@ -35,10 +51,12 @@ session_start();
                     <div class="row">
                         <div class="col">
                             <form action="" method="POST">
-                                <button class="btn btn-success">Admintize (I made up that word)</button>
+                                <input type="hidden" name="id" value="<?php echo $row["id"] ?>">
+                                <button class="btn btn-success" name="change"><?php echo $row["username"] ?></button>
                             </form>
                         </div>
                     </div>
+                    <br>
                     <?php
                 }
             }

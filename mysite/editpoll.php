@@ -125,6 +125,7 @@ try {
         }
         ?>
 
+        <a href="suggestion.php?id=<?php echo $id ?>">Go to main poll page</a>
 
         <?php include "footer.php" ?>
     </div>
