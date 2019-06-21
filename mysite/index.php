@@ -16,10 +16,27 @@ if (isset($_POST["submit"])){
     $conn->exec($sql);
 }
 
-$sql = "SELECT suggestions.*, users.username FROM suggestions JOIN users ON (suggestions.userid = users.id) ORDER BY id DESC";
-$st = $conn->prepare($sql);
-$st->execute();
-$suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
+$sortBy="votenum DESC";
+if (isset($_GET["change"])){
+    $sortBy=$_GET["sort"];
+}
+
+if (isset($_POST["search"])){
+    $phrase = "%".$_POST["phrase"]."%";
+    $sql = "SELECT suggestions.*, users.username FROM suggestions JOIN users ON (suggestions.userid = users.id) WHERE title LIKE '$phrase' OR content LIKE '$phrase' ORDER BY $sortBy";
+    try {
+        $st = $conn->prepare($sql);
+        $st->execute();
+        $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $error) {
+        echo $sql.'<br />'.$error->getMessage();
+    }
+} else {
+    $sql = "SELECT suggestions.*, users.username FROM suggestions JOIN users ON (suggestions.userid = users.id) ORDER BY $sortBy";
+    $st = $conn->prepare($sql);
+    $st->execute();
+    $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,35 +85,71 @@ $suggestions = $st->fetchAll(PDO::FETCH_ASSOC);
         </details>
         <hr>
         <div class="row">
-            <div class="col">
-                <p><b>Title</b></p>
+            <div class="col-10">
+                <div class="row">
+                    <div class="col">
+                        <p><b>Title</b></p>
+                    </div>
+                    <div class="col">
+                        <p><b>Shortened Description</b></p>
+                    </div>
+                    <div class="col">
+                        <p><b>Made by</b></p>
+                    </div>
+                    <div class="col">
+                        <p><b>Created at</b></p>
+                    </div>
+                </div>
+                <?php foreach ($suggestions as $suggestion) {?>
+                    <div class="row">
+                        <div class="col-3" style="word-break: break-word">
+                            <a href="suggestion.php?id=<?php echo $suggestion["id"] ?>"><?php 
+                            if (strlen($suggestion['title']) > 20){
+                                echo substr($suggestion['title'], 0, 40) . "...";
+                            } else {
+                                echo $suggestion["title"];
+                            }
+                            ?></a>
+                        </div>
+                        <div class="col-3" style="word-break: break-word">
+                            <?php 
+                            if (strlen($suggestion['content']) > 20){
+                                echo substr($suggestion['content'], 0, 20) . "...";
+                            } else {
+                                echo $suggestion["content"];
+                            }
+                            ?>
+                        </div>
+                        <div class="col-3">
+                            <?php echo $suggestion['username'] ?>
+                        </div>
+                        <div class="col-3">
+                            <?php echo date("n/j/Y g:i a", strtotime($suggestion["created_at"])) ?>
+                        </div>
+                    </div>
+                <?php } ?>
             </div>
-            <div class="col">
-                <p><b>Shortened Description</b></p>
-            </div>
-            <div class="col">
-                <p><b>Made by</b></p>
-            </div>
-            <div class="col">
-                <p><b>Created at</b></p>
+            <div class="col-2">
+                <form action="" method="GET">
+                    <div class="form-group">
+                        <label for="sortBy">Sort By:</label>
+                        <select id="sortBy" class="form-control" name="sort">
+                            <option selected value="votenum DESC">Trending</option>
+                            <option value="id DESC">Newest</option>
+                            <option value="id ASC">Oldest</option>
+                        </select>
+                    </div>
+                    <button name="change" class="btn btn-info">Update</button>
+                </form>
+                <hr>
+                <form action="" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." name="phrase">
+                    </div>
+                    <button name="search" class="btn btn-primary">Search</button>
+                </form>
             </div>
         </div>
-        <?php foreach ($suggestions as $suggestion) {?>
-            <div class="row">
-                <div class="col">
-                    <a href="suggestion.php?id=<?php echo $suggestion["id"] ?>"><?php echo $suggestion["title"] ?></a>
-                </div>
-                <div class="col">
-                    <?php echo substr($suggestion['content'], 0, 20) . "..." ?>
-                </div>
-                <div class="col">
-                    <?php echo $suggestion['username'] ?>
-                </div>
-                <div class="col">
-                    <?php echo date("n/j/Y g:i a", strtotime($suggestion["created_at"])) ?>
-                </div>
-            </div>
-        <?php } ?>
         <?php include "footer.php" ?>
     </div>
 </body>

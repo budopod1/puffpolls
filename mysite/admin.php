@@ -45,7 +45,8 @@ if (isset($_POST["poll"])) {
         }
         ?>
         <h1>Welcome admin <?php echo $_SESSION["username"] ?></h1>
-        <h3>Fill out the form below to create a poll</h4>
+        <h4><a href="status.php">Click here to change user's status</a></h4>
+        <h3>Fill out the form below to create a poll</h3>
         <div class="p-3">
             <form action="" method="post">
                 <div class="form-group">
@@ -59,7 +60,6 @@ if (isset($_POST["poll"])) {
                 <button type="submit" class="btn btn-primary" name="poll">Create Poll</button>
             </form>
         </div>
-
         <hr>
 
         <h3>Select a poll to add options</h2>

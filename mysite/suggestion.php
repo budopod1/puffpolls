@@ -33,6 +33,12 @@ if (isset($_POST["submit"])){
 
     $sql = "INSERT INTO suggestionvotes (optionid, userid) VALUES ($optionid, $userid)";
     $conn->exec($sql);
+
+    $voteNum = $suggestion["votenum"];
+    $voteNum = $voteNum + 1;
+
+    $sql = "UPDATE suggestions SET votenum = $voteNum WHERE id = $suggestionid";
+    $conn->exec($sql);
 }
 ?>
 
