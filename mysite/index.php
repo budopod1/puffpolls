@@ -168,6 +168,7 @@ if (isset($_POST["search"])){
                     </div>
                     <button name="search" class="btn btn-primary">Search</button>
                 </form>
+                <a href="search.php">Learn about searching</a>
             </div>
         </div>
         <?php include "footer.php" ?>
