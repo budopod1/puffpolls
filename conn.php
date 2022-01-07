@@ -1,9 +1,10 @@
 <?php
 
-#CONNECTION FILE
+#CONNECTION FILE 
+# Wow
 $host = 'localhost';
 $username = 'budopod';
-$pass = 'SethBlingRedstone';
+$pass = '';
 $dbname = 'puffsuggestions';
 $dsn = "mysql:host=$host;dbname=$dbname";
 $options = array(
